@@ -20,7 +20,7 @@ no_attachments  - (OPTIONAL) default is false; if 'true', returned notebook data
 
 ## Notice:
 Here two steps are seperated for easy understanding. If you want to programmaticly download your notebook, use library/package to read the XML. An example python code here:
-
+```
 import xml.etree.ElementTree as ET
 
 xml_data = """
@@ -37,8 +37,8 @@ xml_data = """
         </notebooks>
     </user>
 </response>
-"""
-
+```
+```
 root = ET.fromstring(xml_data)
 
 uid = root.find('.//uid').text
@@ -47,7 +47,7 @@ print(f"UID: {uid}")
 notebook_ids = root.findall('.//notebooks/notebook/id')
 for nb_id in notebook_ids:
     print(f"Notebook ID: {nb_id.text}")
-
+```
 ## Reference
 For more detailed info, please visit labarchives api website:
 https://mynotebook.labarchives.com/MzUuMXwyNy8yNy9Ob3RlYm9vay82NzcyMzY5MjN8ODkuMQ==/notebook-dashboard
