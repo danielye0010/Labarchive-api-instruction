@@ -1,0 +1,41 @@
+import os
+from hashlib import sha1  # for encoding the signature
+import hmac  # for encoding the signature
+import base64  # for encoding the signature
+import urllib  # for "percent" aka url encoding
+import requests  # for getting response from API
+import xml.etree.ElementTree as ET  # for reading XML output of API response
+
+UID = os.environ.get('UID')
+key_id = os.environ.get('key_id')
+access_password = os.environ.get('access_password')
+
+# expire
+time_call = "https://api.labarchives.com/api/utilities/epoch_time?akid=" + key_id
+time = requests.get(time_call)
+time = time.text
+root = ET.fromstring(time)
+expires = root[0].text
+
+# sig
+sig_raw = key_id + "notebook_backup" + expires
+sig_byte = bytearray(sig_raw.encode())
+pass_byte = bytearray(access_password.encode())
+sig_digested = hmac.new(pass_byte, sig_byte, digestmod=sha1).digest()
+sig64 = base64.b64encode(sig_digested)
+sig = urllib.parse.quote(sig64, safe='')
+
+# auth
+auth = "&akid=" + key_id + "&expires=" + expires + "&sig=" + sig
+
+nbid = "MTE1ODI5Ni4xfDg5MDk5Ny84OTA5OTcvTm90ZWJvb2svMTU0OTkyOTgyMHwyOTQwMjkwLjA5OTk5OTk5OTY="
+
+call = "https://api.labarchives.com/api/notebooks/notebook_backup" + "?uid=" + UID + "&nbid=" + nbid
+
+# auth
+auth = "&akid=" + key_id + "&expires=" + expires + "&sig=" + sig
+api_call = call + auth
+
+print(api_call)
+r = requests.get(api_call)
+print(r.text)
