@@ -1,0 +1,20 @@
+# Local environment / credentials
+.env
+
+# Notebook exports and API responses
+notebook_backup_response.*
+*.7z
+*.zip
+*.json
+*.xml
+
+# Python / R local artifacts
+__pycache__/
+*.py[cod]
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+
+# OS / editor
+.DS_Store
